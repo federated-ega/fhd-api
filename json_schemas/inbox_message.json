@@ -1,0 +1,102 @@
+{
+  "definitions": {},
+  "type": "object",
+  "required": [
+    "user",
+    "filepath",
+    "operation",
+    "filesize",
+    "file_last_modified",
+    "encrypted_checksum"
+  ],
+  "properties": {
+    "user": {
+      "type": "string",
+      "pattern": "^(.*)$"
+    },
+    "filepath": {
+      "type": "string",
+      "pattern": "^(.*)$"
+    },
+    "operation": {
+      "type": "string",
+      "enum": [
+        "upload",
+        "remove",
+        "rename"
+      ]
+    },
+    "filesize": {
+      "type": "integer"
+    },
+    "oldpath": {
+      "type": "string",
+      "pattern": "^(.*)$"
+    },
+    "file_last_modified": {
+      "type": "number"
+    },
+    "encrypted_checksum": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "value"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "md5",
+              "sha256"
+            ]
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "if": {
+          "properties": {
+            "type": {
+              "const": "sha256"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "value": {
+              "pattern": "^[A-Fa-f0-9]{64}$"
+            }
+          }
+        },
+        "else": {
+          "properties": {
+            "value": {
+              "pattern": "^[A-Fa-f0-9]{32}$"
+            }
+          }
+        }
+      }
+    }
+  },
+  "if": {
+    "properties": {
+      "operation": {
+        "const": "rename"
+      }
+    }
+  },
+  "then": {
+    "required": [
+      "oldpath"
+    ]
+  },
+  "else": {
+    "not": {
+      "required": [
+        "oldpath"
+      ]
+    }
+  }
+}
