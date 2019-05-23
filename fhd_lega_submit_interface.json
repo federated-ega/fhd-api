@@ -1,0 +1,181 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Federated Human Data LEGA Submission Interface API",
+    "description" : "A proposal for interfacing with LEGA as part submission workflow of the Federated Human Data project Work Package 2.",
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version" : "0.0.1-alpha"
+  },
+  "servers" : [ {
+    "url" : "https://lega.submit.api.com/"
+  } ],
+  "tags": [
+    {
+      "name": "file-submit",
+      "description": "File Submit"
+    },
+    {
+      "name": "file-archive",
+      "description": "File Archive"
+    }
+  ],
+  "paths" : {
+    "/submit/file/{fileID}": {
+      "get": {
+        "description": "Retrieve files from LEGA",
+        "operationId": "retrieveFiles",
+        "tags": ["file-submit"],
+        "parameters": [
+          {
+            "name": "fileID",
+            "in": "path",
+            "required": true,
+            "description": "The name file id submitted, internal, as EGAF was not assigned",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/File"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "File not found"
+          }
+        }
+      },
+      "post": {
+        "tags": ["file-submit"],
+        "description": "Submit EGAF to a specific file. Should be done only after a file has been set in Archived status. Done status means a file has been assigned a stableID",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EGAMap"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201" : {
+            "description": "Accepted"
+          },
+          "404": {
+            "description": "fileID not found"
+          }
+        }
+      }
+    },
+    "/submit/files": {
+      "get" : {
+        "description": "Submitted files",
+        "operationId": "submitFiles",
+        "tags": ["file-submit"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Files"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/archive/files": {
+      "get" : {
+        "description": "Archived files",
+        "operationId": "archiveFiles",
+        "tags": ["file-archive"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Files"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas": {
+      "File": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string"
+          },
+          "fileSize": {
+            "type": "integer"
+          },
+          "fileID": {
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "default": "Submitted",
+            "description": "Show  the status of the file, if it has just been submitted in inbox, or started processing, or some error occurred or finally has been archived. Done means that all checks completed.",
+            "enum": ["Processing", "Error", "Archived", "QualityControl", "Submitted", "Done"]
+          },
+          "checksum": {
+            "type": "string"
+          }
+        }
+      },
+      "Files": {
+        "type": "object",
+        "properties": {
+          "fileID" : {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "description": "Show  the status of the file, if it has just been submitted in inbox, or started processing, or some error occurred or finally has been archived. Done means that all checks completed.",
+            "enum": ["Processing", "Error", "Archived", "QualityControl", "Submitted", "Done"]
+          }
+        }
+      },
+      "EGAMap": {
+        "type": "object",
+        "properties": {
+          "fileID": {
+            "type": "string"
+          },
+          "stableID": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+
+  }
+}

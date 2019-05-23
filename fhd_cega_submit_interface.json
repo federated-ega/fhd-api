@@ -1,0 +1,118 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Federated Human Data CEGA Submission Interface API",
+    "description" : "A proposal for interfacing with CEGA as part submission workflow of the Federated Human Data project Work Package 2.",
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version" : "0.0.1-alpha"
+  },
+  "servers" : [ {
+    "url" : "https://cega.submit.api.com/"
+  } ],
+  "tags": [
+    {
+      "name": "file-submit",
+      "description": "File Submit"
+    },
+    {
+      "name": "file-metadata",
+      "description": "File metadata"
+    }
+  ],
+  "paths" : {
+    "/submit/files/{lega}": {
+      "get": {
+        "description": "Retrieve files submitted to CEGA for a specific instance",
+        "operationId": "retrieveFiles",
+        "tags": ["file-submit"],
+        "parameters": [
+          {
+            "name": "lega",
+            "in": "path",
+            "description": "Lega Instance where the files where specified to be submitted.",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Files"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "File not found"
+          }
+        }
+      }
+    },
+    "/metadata/file/{fileID}": {
+      "get" : {
+        "description": "Retrieve file metadata",
+        "operationId": "metadataFile",
+        "parameters": [
+          {
+            "name": "fileID",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "tags": ["file-metadata"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+              },
+              "application/xml": {
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas": {
+      "Files": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "user": {
+              "type": "string"
+            },
+            "fileSize": {
+              "type": "integer"
+            },
+            "fileID": {
+              "type": "string"
+            },
+            "fileName": {
+              "type": "string"
+            },
+            "checksum": {
+              "type": "string"
+            }
+          }
+        }
+      }
+
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+
+  }
+}
