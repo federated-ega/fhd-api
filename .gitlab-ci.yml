@@ -1,0 +1,27 @@
+cache:
+  paths:
+    - .pip
+
+stages:
+  - test
+
+before_script:
+  - pip --cache-dir=.pip install openapi-spec-validator
+
+test_schema_lega_submit:
+  stage: test
+  image: python:3.6
+  script:
+    - openapi-spec-validator fhd_lega_submit_interface.json
+
+test_schema_lega_access:
+  stage: test
+  image: python:3.6
+  script:
+    - openapi-spec-validator fhd_lega_access_interface.json
+
+test_schema_cega_sumbit:
+  stage: test
+  image: python:3.6
+  script:
+    - openapi-spec-validator fhd_cega_submit_interface.json

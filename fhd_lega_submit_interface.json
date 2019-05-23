@@ -54,7 +54,9 @@
             "description": "File not found"
           }
         }
-      },
+      }
+    },
+    "/submit/file": {
       "post": {
         "tags": ["file-submit"],
         "description": "Submit EGAF to a specific file. Should be done only after a file has been set in Archived status. Done status means a file has been assigned a stableID",
