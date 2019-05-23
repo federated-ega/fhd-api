@@ -33,7 +33,10 @@
             "name": "lega",
             "in": "path",
             "description": "Lega Instance where the files where specified to be submitted.",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -61,7 +64,10 @@
           {
             "name": "fileID",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "tags": ["file-metadata"],
