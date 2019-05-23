@@ -278,7 +278,8 @@
             "required": false,
             "schema": {
               "type": "string",
-              "default": "aes128"
+              "default": "aes128",
+              "enum": ["aes128", "crypt4gh", "plain"]
             }
           },
           {
