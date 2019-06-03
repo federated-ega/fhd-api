@@ -1,0 +1,29 @@
+language: python
+
+matrix:
+  include:
+    - python: 3.6
+
+install:  pip --cache-dir=.pip install openapi-spec-validator
+
+stages:
+  - name: tests
+    if: type IN (push, pull_request)
+
+jobs:
+  include:
+    - stage: tests
+      name: "Test LEGA Submit Interface"
+      python: 3.6
+      script: openapi-spec-validator fhd_lega_submit_interface.json
+    - stage: tests
+      name: "Test LEGA Access Interface"
+      python: 3.6
+      script: openapi-spec-validator fhd_lega_access_interface.json
+    - stage: tests
+      name: "Test CEGA Submit Interface"
+      python: 3.6
+      script: openapi-spec-validator fhd_cega_submit_interface.json
+
+notifications:
+  email: false
